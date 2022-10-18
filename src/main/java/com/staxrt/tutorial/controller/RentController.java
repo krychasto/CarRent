@@ -25,4 +25,8 @@ public class RentController {
     public void createRent(@Valid @RequestBody Rent rent) throws Exception{
         rentService.createRent(rent);
     }
+    @DeleteMapping("/rents/{id}")
+    public void deleteRent(@PathVariable(value="id") Long rentId) throws Exception{
+        rentService.deleteRent(rentId);
+    }
 }
