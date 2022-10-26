@@ -36,5 +36,4 @@ public class Rent {
                 ", car_id='" + carId + '\'' +
                 '}';
     }
-
 }

@@ -20,7 +20,7 @@ public class Car {
     private String vin;
 
     @Column(name = "engine_capacity", nullable = false)
-    private Long engineCapacity;
+    private Float engineCapacity;
 
     @Override
     public String toString(){
