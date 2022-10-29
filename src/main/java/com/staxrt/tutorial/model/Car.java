@@ -2,6 +2,7 @@ package com.staxrt.tutorial.model;
 
 import lombok.Data;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
 
 @Data
@@ -20,15 +21,5 @@ public class Car {
     private String vin;
 
     @Column(name = "engine_capacity", nullable = false)
-    private Float engineCapacity;
-
-    @Override
-    public String toString(){
-        return "Car{" +
-                "id=" + id +
-                ", carBrand='" + carBrand + '\'' +
-                ", vin='" + vin + '\'' +
-                ", engineCapacity='" + engineCapacity + '\'' +
-                '}';
-    }
+    private int engineCapacity;
 }

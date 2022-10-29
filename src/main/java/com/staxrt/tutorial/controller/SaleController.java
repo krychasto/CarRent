@@ -2,26 +2,32 @@ package com.staxrt.tutorial.controller;
 
 import com.staxrt.tutorial.model.Sale;
 import com.staxrt.tutorial.services.SaleService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
-@Validated
 @RestController
-@RequestMapping("/api/sale")
+@RequiredArgsConstructor
+@RequestMapping("sale")
 public class SaleController {
 
-    @Autowired
-    SaleService saleService;
+    private final SaleService saleService;
 
-    @GetMapping("/sales")
-    public List<Sale> getAllSales(){return saleService.getAllSales();}
+    @GetMapping()
+    public List<Sale> getAllSales() {
+        return saleService.getAllSales();
+    }
 
-    @PostMapping("/rent/{rentid}")
-    public void createSale(@PathVariable(value="rentid") Long rentId) throws Exception{
+    @PostMapping("/{rentid}")
+    public void createSale(@PathVariable(value = "rentid") Long rentId) throws Exception {
         saleService.createSale(rentId);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteSale(@PathVariable(value = "id") Long saleId) {
+        saleService.deleteSale(saleId);
+        return ResponseEntity.ok().build();
     }
 }

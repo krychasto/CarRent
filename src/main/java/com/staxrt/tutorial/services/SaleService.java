@@ -4,36 +4,50 @@ import com.staxrt.tutorial.exception.ResourceNotFoundException;
 import com.staxrt.tutorial.model.Rent;
 import com.staxrt.tutorial.model.Sale;
 import com.staxrt.tutorial.repository.RentRepository;
+import com.staxrt.tutorial.repository.SaleRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.RelationServiceNotRegisteredException;
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class SaleService {
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
+    private final SaleRepository saleRepository;
     private final RentRepository rentRepository;
+    private final JdbcTemplate jdbcTemplate;
 
-    public List<Sale> getAllSales(){
-        String sql = "SELECT * FROM sales";
-        return (List<Sale>)  jdbcTemplate.query(sql, new BeanPropertyRowMapper(Sale.class));
+    @Transactional
+    public List<Sale> getAllSales() {
+        return saleRepository.findAll();
     }
-    public void createSale(Long rentId) throws Exception{
-        Double oneDayPrice = 100.0;
+
+    @Transactional
+    public void createSale(Long rentId) throws Exception {
+        BigDecimal DayPrice = new BigDecimal("100");
+        BigDecimal m = new BigDecimal("86400000");
         String sql = "INSERT INTO sales (rent_id,price) VALUES (?,?)";
-        if(!rentRepository.findById(rentId).isPresent()){
+        if (!rentRepository.findById(rentId).isPresent()) {
             throw new ResourceNotFoundException("This rent doesn't exists");
-        }else{
+        } else {
             Rent rent = rentRepository.findById(rentId).get();
-            Double price = ((rent.getEndRental().getTime()-rent.getStartRental().getTime())/86400000)*oneDayPrice;
+            BigDecimal price = BigDecimal.valueOf((rent.getEndRental().getTime() - rent.getStartRental().getTime())).divide(m).multiply(DayPrice);
             jdbcTemplate.update(sql, rentId, price);
+        }
+    }
+
+    public ResponseEntity deleteSale(Long id) {
+        Optional<Sale> sale = saleRepository.findById(id);
+        if (sale.isPresent()) {
+            saleRepository.delete(sale.get());
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }
