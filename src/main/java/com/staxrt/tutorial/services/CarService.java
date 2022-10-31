@@ -24,7 +24,7 @@ public class CarService {
         carRepository.save(car);
     }
 
-    public ResponseEntity deleteCar(Long id) {
+    public ResponseEntity<Car> deleteCar(Long id) {
         Optional<Car> car = carRepository.findById(id);
         if (car.isPresent()) {
             carRepository.delete(car.get());
@@ -34,12 +34,8 @@ public class CarService {
         }
     }
 
-    public ResponseEntity findCarById(Long id) {
+    public ResponseEntity<Car> findCarById(Long id) {
         Optional<Car> car = carRepository.findById(id);
-        if (car.isPresent()) {
-            return ResponseEntity.ok().body(car.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return car.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

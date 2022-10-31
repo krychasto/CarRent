@@ -26,8 +26,7 @@ public class SaleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteSale(@PathVariable(value = "id") Long saleId) {
-        saleService.deleteSale(saleId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Sale> deleteSale(@PathVariable(value = "id") Long saleId) {
+        return saleService.deleteSale(saleId);
     }
 }

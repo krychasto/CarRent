@@ -39,7 +39,7 @@ public class RentService {
     }
 
     @Transactional
-    public ResponseEntity deleteRent(Long id) {
+    public ResponseEntity<Rent> deleteRent(Long id) {
         Optional<Rent> rent = rentRepository.findById(id);
         if (rent.isPresent()) {
             rentRepository.delete(rent.get());

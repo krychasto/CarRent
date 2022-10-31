@@ -28,7 +28,7 @@ public class UserService {
         }
     }
 
-    public ResponseEntity deleteUser(Long id) {
+    public ResponseEntity<User> deleteUser(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             userRepository.delete(user.get());

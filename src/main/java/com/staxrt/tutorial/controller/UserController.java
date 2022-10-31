@@ -21,14 +21,13 @@ public class UserController {
     }
 
     @PostMapping()
-    public void createUser(@Valid @RequestBody User user) throws Exception {
-        userService.createUser(user);
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user) throws Exception {
+        return userService.createUser(user);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteUser(@PathVariable(value = "id") Long userId) throws Exception {
-        userService.deleteUser(userId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<User> deleteUser(@PathVariable(value = "id") Long userId) throws Exception {
+        return userService.deleteUser(userId);
     }
 
     @GetMapping("/{id}")

@@ -27,12 +27,12 @@ public class CarController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteUser(@PathVariable(value = "id") Long carId) {
+    public ResponseEntity<Car> deleteUser(@PathVariable(value = "id") Long carId) {
         return carService.deleteCar(carId);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity findCarById(@PathVariable(value = "id") Long carId) throws Exception {
+    public ResponseEntity<Car> findCarById(@PathVariable(value = "id") Long carId) throws Exception {
         return carService.findCarById(carId);
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,13 +37,13 @@ public class SaleService {
             throw new ResourceNotFoundException("This rent doesn't exists");
         } else {
             Rent rent = rentRepository.findById(rentId).get();
-            BigDecimal price = BigDecimal.valueOf((rent.getEndRental().getTime() - rent.getStartRental().getTime())).divide(m).multiply(DayPrice);
+            BigDecimal price = BigDecimal.valueOf((rent.getEndRental().getTime() - rent.getStartRental().getTime())).divide(m, RoundingMode.HALF_UP).multiply(DayPrice);
             jdbcTemplate.update(sql, rentId, price);
         }
     }
 
     @Transactional
-    public ResponseEntity deleteSale(Long id) {
+    public ResponseEntity<Sale> deleteSale(Long id) {
         Optional<Sale> sale = saleRepository.findById(id);
         if (sale.isPresent()) {
             saleRepository.delete(sale.get());

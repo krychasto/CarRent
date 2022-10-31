@@ -26,7 +26,7 @@ public class RentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteRent(@PathVariable(value = "id") Long rentId) {
+    public ResponseEntity<Rent> deleteRent(@PathVariable(value = "id") Long rentId) {
         return rentService.deleteRent(rentId);
     }
 }
