@@ -41,6 +41,7 @@ public class SaleService {
         }
     }
 
+    @Transactional
     public ResponseEntity deleteSale(Long id) {
         Optional<Sale> sale = saleRepository.findById(id);
         if (sale.isPresent()) {
