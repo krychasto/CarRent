@@ -3,7 +3,6 @@ package com.staxrt.tutorial.services;
 import com.staxrt.tutorial.model.Car;
 import com.staxrt.tutorial.repository.CarRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +33,8 @@ public class CarService {
         }
     }
 
-    public ResponseEntity<Car> findCarById(Long id) {
+    public Car findCarById(Long id) {
         Optional<Car> car = carRepository.findById(id);
-        return car.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.notFound().build());
+        return car.get();
     }
 }

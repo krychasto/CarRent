@@ -26,12 +26,11 @@ public class RentService {
 
     @Transactional
     public void createRent(Rent rent) throws Exception {
-        boolean carRents = rentRepository.findByCarId(rent.getCarId()).stream().allMatch(carRent -> (rent.getStartRental().before(carRent.getStartRental()) && rent.getEndRental().before(carRent.getStartRental())) || (rent.getStartRental().after(carRent.getEndRental()) && rent.getEndRental().after(carRent.getEndRental())));
         if (!userRepository.findById(rent.getUserId()).isPresent()) {
             throw new ResourceNotFoundException("This user doesn't exists in database");
         } else if (!carRepository.findById(rent.getCarId()).isPresent()) {
             throw new ResourceNotFoundException("This car doesn't exists in database");
-        } else if (!carRents) {
+        } else if (!checkTime(rent)) {
             throw new IllegalStateException("This car is already rented");
         } else {
             rentRepository.save(rent);
@@ -47,5 +46,9 @@ public class RentService {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    private boolean checkTime(Rent rent) {
+        return rentRepository.findByCarId(rent.getCarId()).stream().allMatch(carRent -> (rent.getStartRental().before(carRent.getStartRental()) && rent.getEndRental().before(carRent.getStartRental())) || (rent.getStartRental().after(carRent.getEndRental()) && rent.getEndRental().after(carRent.getEndRental())));
     }
 }

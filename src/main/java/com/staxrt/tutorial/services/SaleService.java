@@ -7,7 +7,6 @@ import com.staxrt.tutorial.repository.RentRepository;
 import com.staxrt.tutorial.repository.SaleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,9 +18,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class SaleService {
+    private final static BigDecimal DayPrice = new BigDecimal("100");
+    private final static BigDecimal DayInMs = new BigDecimal("86400000");
     private final SaleRepository saleRepository;
     private final RentRepository rentRepository;
-    private final JdbcTemplate jdbcTemplate;
 
     @Transactional
     public List<Sale> getAllSales() {
@@ -30,15 +30,12 @@ public class SaleService {
 
     @Transactional
     public void createSale(Long rentId) throws Exception {
-        BigDecimal DayPrice = new BigDecimal("100");
-        BigDecimal m = new BigDecimal("86400000");
-        String sql = "INSERT INTO sales (rent_id,price) VALUES (?,?)";
         if (!rentRepository.findById(rentId).isPresent()) {
             throw new ResourceNotFoundException("This rent doesn't exists");
         } else {
             Rent rent = rentRepository.findById(rentId).get();
-            BigDecimal price = BigDecimal.valueOf((rent.getEndRental().getTime() - rent.getStartRental().getTime())).divide(m, RoundingMode.HALF_UP).multiply(DayPrice);
-            jdbcTemplate.update(sql, rentId, price);
+            BigDecimal price = BigDecimal.valueOf((rent.getEndRental().getTime() - rent.getStartRental().getTime())).divide(DayInMs, RoundingMode.HALF_UP).multiply(DayPrice);
+            saleRepository.newSale(price, rentId);
         }
     }
 

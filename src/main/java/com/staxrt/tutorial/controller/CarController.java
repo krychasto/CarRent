@@ -32,7 +32,7 @@ public class CarController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Car> findCarById(@PathVariable(value = "id") Long carId) throws Exception {
-        return carService.findCarById(carId);
+    public ResponseEntity<Car> findCarById(@PathVariable(value = "id") Long carId) {
+        return ResponseEntity.ok(carService.findCarById(carId));
     }
 }
