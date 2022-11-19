@@ -45,7 +45,4 @@ public class User {
     @LastModifiedBy
     private String updatedBy;
 
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
-    }
 }
