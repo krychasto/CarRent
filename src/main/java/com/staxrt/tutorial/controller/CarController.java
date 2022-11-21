@@ -28,7 +28,7 @@ public class CarController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Car> deleteUser(@PathVariable(value = "id") Long carId) {
-        return carService.deleteCar(carId);
+        return ResponseEntity.ok(carService.deleteCar(carId));
     }
 
     @GetMapping("/{id}")

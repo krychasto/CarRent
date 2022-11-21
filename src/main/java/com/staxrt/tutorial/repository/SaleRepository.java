@@ -12,9 +12,9 @@ import java.math.RoundingMode;
 public interface SaleRepository extends JpaRepository<Sale, Long> {
 
     default void newSale(Long rentId, Rent rent) {
-        final BigDecimal DayPrice = new BigDecimal("100");
-        final BigDecimal DayInMs = new BigDecimal("86400000");
-        BigDecimal price = BigDecimal.valueOf((rent.getEndRental().getTime() - rent.getStartRental().getTime())).divide(DayInMs, RoundingMode.HALF_UP).multiply(DayPrice);
+        final BigDecimal dayPrice = new BigDecimal("100");
+        final BigDecimal dayInMs = new BigDecimal("86400000");
+        BigDecimal price = BigDecimal.valueOf((rent.getEndRental().getTime() - rent.getStartRental().getTime())).divide(dayInMs, RoundingMode.HALF_UP).multiply(dayPrice);
         Sale newSale = new Sale();
         newSale.setPrice(price);
         newSale.setRentId(rentId);

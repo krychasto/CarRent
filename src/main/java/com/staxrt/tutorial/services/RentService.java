@@ -6,7 +6,6 @@ import com.staxrt.tutorial.repository.CarRepository;
 import com.staxrt.tutorial.repository.RentRepository;
 import com.staxrt.tutorial.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -38,13 +37,13 @@ public class RentService {
     }
 
     @Transactional
-    public ResponseEntity<Rent> deleteRent(Long id) {
+    public Rent deleteRent(Long id) {
         Optional<Rent> rent = rentRepository.findById(id);
         if (rent.isPresent()) {
             rentRepository.delete(rent.get());
-            return ResponseEntity.ok().build();
+            return rent.get();
         } else {
-            return ResponseEntity.notFound().build();
+            return null;
         }
     }
 

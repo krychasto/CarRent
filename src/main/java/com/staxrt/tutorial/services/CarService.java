@@ -3,7 +3,6 @@ package com.staxrt.tutorial.services;
 import com.staxrt.tutorial.model.Car;
 import com.staxrt.tutorial.repository.CarRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,13 +22,13 @@ public class CarService {
         carRepository.save(car);
     }
 
-    public ResponseEntity<Car> deleteCar(Long id) {
+    public Car deleteCar(Long id) {
         Optional<Car> car = carRepository.findById(id);
         if (car.isPresent()) {
             carRepository.delete(car.get());
-            return ResponseEntity.ok().build();
+            return car.get();
         } else {
-            return ResponseEntity.notFound().build();
+            return null;
         }
     }
 

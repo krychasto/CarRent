@@ -22,21 +22,21 @@ public class UserController {
 
     @PostMapping()
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) throws Exception {
-        return userService.createUser(user);
+        return ResponseEntity.ok(userService.createUser(user));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable(value = "id") Long userId) throws Exception {
+    public User deleteUser(@PathVariable(value = "id") Long userId) throws Exception {
         return userService.deleteUser(userId);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<User> findUserById(@PathVariable(value = "id") Long userId) throws Exception {
-        return userService.findUserById(userId);
+        return ResponseEntity.ok(userService.findUserById(userId));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable(value = "id") Long userId, @Valid @RequestBody User userDetails) throws Exception {
-        return userService.updateUser(userId, userDetails);
+        return ResponseEntity.ok(userService.updateUser(userId, userDetails));
     }
 }
