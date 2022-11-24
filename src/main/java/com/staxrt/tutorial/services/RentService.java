@@ -1,42 +1,53 @@
 package com.staxrt.tutorial.services;
 
-
 import com.staxrt.tutorial.exception.ResourceNotFoundException;
 import com.staxrt.tutorial.model.Rent;
 import com.staxrt.tutorial.repository.CarRepository;
+import com.staxrt.tutorial.repository.RentRepository;
 import com.staxrt.tutorial.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class RentService {
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
     private final UserRepository userRepository;
-
+    private final RentRepository rentRepository;
     private final CarRepository carRepository;
-    public List<Rent> getAllRents(){
-        String sql = "SELECT * FROM rents";
-        return (List<Rent>) jdbcTemplate.query(sql, new BeanPropertyRowMapper(Rent.class));
+
+    public List<Rent> getAllRents() {
+        return rentRepository.findAll();
     }
+
     @Transactional
-    public void createRent(Rent rent) throws Exception{
-        String sql = "INSERT INTO rents (car_id,user_id,start_rental,end_rental) VALUES (?,?,?,?)";
-        if(!userRepository.findById(rent.getUserId()).isPresent()) {
+    public void createRent(Rent rent) throws Exception {
+        if (!userRepository.findById(rent.getUserId()).isPresent()) {
             throw new ResourceNotFoundException("This user doesn't exists in database");
-        }else if(!carRepository.findById(rent.getCarId()).isPresent()){
+        } else if (!carRepository.findById(rent.getCarId()).isPresent()) {
             throw new ResourceNotFoundException("This car doesn't exists in database");
+        } else if (!checkTime(rent)) {
+            throw new IllegalStateException("This car is already rented");
         } else {
-            jdbcTemplate.update(sql, rent.getCarId(), rent.getUserId(), rent.getStartRental(), rent.getEndRental());
+            rentRepository.save(rent);
         }
+    }
+
+    @Transactional
+    public Rent deleteRent(Long id) {
+        Optional<Rent> rent = rentRepository.findById(id);
+        if (rent.isPresent()) {
+            rentRepository.delete(rent.get());
+            return rent.get();
+        } else {
+            return null;
+        }
+    }
+
+    private boolean checkTime(Rent rent) {
+        return rentRepository.findByCarId(rent.getCarId()).stream().allMatch(carRent -> (rent.getStartRental().before(carRent.getStartRental()) && rent.getEndRental().before(carRent.getStartRental())) || (rent.getStartRental().after(carRent.getEndRental()) && rent.getEndRental().after(carRent.getEndRental())));
     }
 }

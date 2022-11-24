@@ -2,27 +2,31 @@ package com.staxrt.tutorial.controller;
 
 import com.staxrt.tutorial.model.Rent;
 import com.staxrt.tutorial.services.RentService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
-@Validated
 @RestController
-@RequestMapping("/api/rent")
+@RequiredArgsConstructor
+@RequestMapping("rent")
 public class RentController {
-    @Autowired
-    RentService rentService;
+    private final RentService rentService;
 
-    @GetMapping("/rents")
-    public List<Rent> getAllRents(){
+    @GetMapping()
+    public List<Rent> getAllRents() {
         return rentService.getAllRents();
     }
 
-    @PostMapping("/rents")
-    public void createRent(@Valid @RequestBody Rent rent) throws Exception{
+    @PostMapping()
+    public void createRent(@Valid @RequestBody Rent rent) throws Exception {
         rentService.createRent(rent);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Rent> deleteRent(@PathVariable(value = "id") Long rentId) {
+        return ResponseEntity.ok(rentService.deleteRent(rentId));
     }
 }
