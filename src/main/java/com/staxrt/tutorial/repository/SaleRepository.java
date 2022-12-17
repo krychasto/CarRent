@@ -7,9 +7,13 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Long> {
+
+    List<Sale> findAllByInvoiceDateBetween(Date invoiceDateStart, Date invoiceDateEnd);
 
     default void newSale(Long rentId, Rent rent) {
         final BigDecimal dayPrice = new BigDecimal("100");
@@ -20,4 +24,5 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
         newSale.setRentId(rentId);
         SaleRepository.this.save(newSale);
     }
+
 }
