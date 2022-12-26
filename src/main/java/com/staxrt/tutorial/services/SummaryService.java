@@ -25,7 +25,7 @@ public class SummaryService {
         return mongoTemplate.findAll(Summary.class);
     }
 
-    public Summary createDaySummary() {
+    public void createDaySummary() {
         Summary summary = new Summary();
         LocalDateTime todayStart = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime todayEnd = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(99);
@@ -33,7 +33,6 @@ public class SummaryService {
         summary.setSaleList(saleList);
         summary.setSummaryDate(LocalDateTime.now().toString());
         mongoTemplate.insert(summary);
-        return summary;
     }
 
     @EventListener(ApplicationReadyEvent.class)

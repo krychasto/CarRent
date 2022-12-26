@@ -3,13 +3,15 @@ package com.staxrt.tutorial.controller;
 import com.staxrt.tutorial.model.Summary;
 import com.staxrt.tutorial.services.SummaryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@EnableScheduling
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("summary")
@@ -21,8 +23,9 @@ public class SummaryController {
         return summaryService.getAllSummaries();
     }
 
-    @PostMapping()
-    public Summary setNewSummary() {
-        return summaryService.createDaySummary();
+    //Fix me
+    @Scheduled(fixedDelay = 86400000)
+    public void createNewSummary() {
+        summaryService.createDaySummary();
     }
 }
